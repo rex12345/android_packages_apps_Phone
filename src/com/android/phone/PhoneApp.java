@@ -1114,7 +1114,22 @@ public class PhoneApp extends Application implements AccelerometerListener.Orien
                        + ", isDialing " + isDialing
                        + ", showingDisc " + showingDisconnectedConnection + ")");
         // keepScreenOn == true means we'll hold a full wake lock:
-        requestWakeState(keepScreenOn ? WakeState.FULL : WakeState.SLEEP);
+        //requestWakeState(keepScreenOn ? WakeState.FULL : WakeState.SLEEP);
+        // we do not have the proximity sensor, so need a fix
+        if (keepScreenOn) {
+			requestWakeState(WakeState.FULL);
+			Log.d(LOG_TAG, "### deadlink: fix wake state: FULL");
+		}
+		else {
+			if (state == Phone.State.IDLE) {
+				requestWakeState(WakeState.SLEEP);
+				Log.d(LOG_TAG, "### deadlink: fix wake state: SLEEP");
+			}
+			else {
+				requestWakeState(WakeState.PARTIAL);
+				Log.d(LOG_TAG, "### deadlink: fix wake state: PARTIAL");
+			}
+		}
     }
 
     /**
